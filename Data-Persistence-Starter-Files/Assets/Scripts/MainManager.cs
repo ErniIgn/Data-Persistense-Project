@@ -14,9 +14,6 @@ public class MainManager : MonoBehaviour
     public Text HighScoreText;
     public GameObject GameOverText;
 
-    private int m_HighScore;
-    private string PlayerName;
-
     private bool m_Started = false;
     private int m_Points;
     
@@ -28,8 +25,7 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         //Set HighScore
-        PlayerName = "Sara";
-        HighScoreText.text = "Best Score : " + PlayerName + " : " + m_HighScore;
+        HighScoreText.text += SavesManager.Instance.BestPlayer.HighScorePlayer + " : " + SavesManager.Instance.BestPlayer.HighScore;
 
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
@@ -83,11 +79,13 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
-        if (m_Points > m_HighScore)
+        if (m_Points > SavesManager.Instance.BestPlayer.HighScore)
         {
-            m_HighScore = m_Points;
+            SavesManager.Instance.BestPlayer.HighScore = m_Points;
+            SavesManager.Instance.BestPlayer.HighScorePlayer = SavesManager.Instance.CurrPlayer;
+            SavesManager.Instance.SaveHighScore();
+            HighScoreText.text = "Best Score : " + SavesManager.Instance.BestPlayer.HighScorePlayer + " : " + SavesManager.Instance.BestPlayer.HighScore;
         }
-        HighScoreText.text = "Best Score : " + PlayerName + " : " + m_HighScore;
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
